@@ -14,7 +14,10 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  scene: [CharacterCreatorScene]
+  dom: {
+    createContainer: true // needed for the shop name text field
+  },
+  scene: [CharacterCreatorScene, ShopBrandingScene, ShopFloorScene, BackyardScene]
 };
 
 const game = new Phaser.Game(config);

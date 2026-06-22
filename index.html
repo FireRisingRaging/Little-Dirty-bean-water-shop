@@ -23,11 +23,18 @@
 <body>
   <div id="game-container"></div>
 
-  <!-- Phaser, loaded straight from a CDN. No build step, no npm install needed -->
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <!-- Phaser is bundled locally in js/lib so the game works with no internet
+       connection and no dependency on a CDN being reachable -->
+  <script src="js/lib/phaser.min.js"></script>
 
   <!-- Game scenes, then the config that wires them together -->
+  <script src="js/utils/icons.js"></script>
+  <script src="js/utils/character.js"></script>
+  <script src="js/utils/topdown.js"></script>
   <script src="js/scenes/CharacterCreatorScene.js"></script>
+  <script src="js/scenes/ShopBrandingScene.js"></script>
+  <script src="js/scenes/ShopFloorScene.js"></script>
+  <script src="js/scenes/BackyardScene.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

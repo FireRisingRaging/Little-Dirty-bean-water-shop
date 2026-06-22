@@ -50,10 +50,9 @@ class CharacterCreatorScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // ---- character preview ---------------------------------------------
-    // The character is drawn inside a 120x180 box; charX/charY is its top-left corner.
-    this.charX = 180;
-    this.charY = 50;
-    this.charGraphics = this.add.graphics();
+    // dbwDrawCharacterArt draws centered on local (0,0), so position the
+    // graphics object at the center of where the preview should appear.
+    this.charGraphics = this.add.graphics().setPosition(240, 140);
     this.drawCharacter();
 
     // ---- swatches -------------------------------------------------------
@@ -78,51 +77,11 @@ class CharacterCreatorScene extends Phaser.Scene {
     button.on('pointerdown', () => this.confirmCharacter());
   }
 
-  // Draws the character with the currently selected colors.
-  // Coordinates are hand-picked to look roughly like a simple front-facing
-  // chibi figure: hair, head, eyes, shirt, arms, pants, shoes.
+  // Draws the character with the currently selected colors. The actual
+  // shape-drawing lives in js/utils/character.js so it can be reused for
+  // the walking player sprite later.
   drawCharacter() {
-    const g = this.charGraphics;
-    const ox = this.charX;
-    const oy = this.charY;
-    const skin = 0xf1c6a0;
-    const dark = 0x231d28;
-    const pantsColor = this.shadeColor(this.clothesColor, -0.25);
-
-    g.clear();
-
-    // hair (top + side flaps, drawn first so the head can sit on top of it)
-    g.fillStyle(this.hairColor, 1);
-    g.fillRect(ox + 12, oy + 0, 96, 28);
-    g.fillRect(ox + 12, oy + 16, 16, 48);
-    g.fillRect(ox + 92, oy + 16, 16, 48);
-
-    // head/face
-    g.fillStyle(skin, 1);
-    g.fillRect(ox + 28, oy + 16, 64, 56);
-
-    // eyes
-    g.fillStyle(dark, 1);
-    g.fillRect(ox + 40, oy + 40, 12, 12);
-    g.fillRect(ox + 68, oy + 40, 12, 12);
-
-    // shirt/apron
-    g.fillStyle(this.clothesColor, 1);
-    g.fillRect(ox + 16, oy + 72, 88, 56);
-
-    // arms
-    g.fillStyle(skin, 1);
-    g.fillRect(ox + 0, oy + 76, 16, 44);
-    g.fillRect(ox + 104, oy + 76, 16, 44);
-
-    // pants (a darker shade of the clothes color, so one choice still reads as an outfit)
-    g.fillStyle(pantsColor, 1);
-    g.fillRect(ox + 28, oy + 128, 64, 40);
-
-    // shoes
-    g.fillStyle(dark, 1);
-    g.fillRect(ox + 28, oy + 168, 32, 12);
-    g.fillRect(ox + 60, oy + 168, 32, 12);
+    dbwDrawCharacterArt(this.charGraphics, this.hairColor, this.clothesColor);
   }
 
   // Creates a row of clickable color swatches starting at (x, y).
@@ -159,15 +118,9 @@ class CharacterCreatorScene extends Phaser.Scene {
     return { swatchRects, highlight };
   }
 
-  // Darkens (negative amount) or lightens (positive amount) a hex color.
-  // amount is a fraction, e.g. -0.25 darkens by 25%.
-  shadeColor(hex, amount) {
-    const r = (hex >> 16) & 0xff;
-    const g = (hex >> 8) & 0xff;
-    const b = hex & 0xff;
-    const adjust = (c) => Phaser.Math.Clamp(Math.round(c * (1 + amount)), 0, 255);
-    return (adjust(r) << 16) | (adjust(g) << 8) | adjust(b);
-  }
+  // (pants-shading logic now lives in js/utils/character.js as dbwShadeColor,
+  // shared with the walking player sprite)
+
 
   confirmCharacter() {
     const data = { hairColor: this.hairColor, clothesColor: this.clothesColor };
@@ -179,9 +132,8 @@ class CharacterCreatorScene extends Phaser.Scene {
       this.confirmText.setText('Could not save :(');
     }
 
-    // Next step in the flow would be the shop branding/naming screen:
-    // this.scene.start('ShopBranding');
     console.log('Character created:', data);
+    this.time.delayedCall(500, () => this.scene.start('ShopBranding'));
   }
 
   loadSavedCharacter() {
