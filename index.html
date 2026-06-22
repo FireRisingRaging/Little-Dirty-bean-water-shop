@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dirty Bean Water Shop</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #14101a;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+    }
+    #game-container {
+      box-shadow: 0 0 0 4px #3a2e4a;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container"></div>
+
+  <!-- Phaser, loaded straight from a CDN. No build step, no npm install needed -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+  <!-- Game scenes, then the config that wires them together -->
+  <script src="js/scenes/CharacterCreatorScene.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
